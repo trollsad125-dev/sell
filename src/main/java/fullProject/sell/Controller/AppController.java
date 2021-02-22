@@ -10,10 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,13 +61,13 @@ public class AppController {
 
 
     @GetMapping("/quan-ao/{page}")
-    public String viewQuanAo(@PathVariable(value = "page") int page, ModelMap model) {
+    public String viewQuanAo(@PathVariable(value = "page") Integer page, ModelMap model) {
         Page<Product> listCate1ByPage = productService.ListCate1ByPage(PageRequest.of(page - 1, PRODUCTPERPAGE));
         List<Integer> listPage = productService.calculateTotalPage(productService.countProductCateId1(), PRODUCTPERPAGE);
         model.addAttribute("pageSize", listPage);
         model.addAttribute("list", listCate1ByPage.getContent());
         model.addAttribute("currentPage", page);
-        if (page > 1) {
+        if (page > listPage.size()) {
             return "/exception/404error";
         }
         return "/shop/quanao";
@@ -95,9 +92,10 @@ public class AppController {
         return "index";
     }
 
-    @GetMapping("/quan-ao2/{page}")
+    @PostMapping("/quan-ao2")
     @ResponseBody
-    public Pageable page(@RequestParam(value = "data") String data, @PathVariable(value = "page") int page){
+    public Pageable page(@RequestParam(value = "data") String pageString){
+        int page = Integer.parseInt(pageString);
         Pageable pageable = new Pageable();
         List<Integer> listPage = productService.calculateTotalPage(productService.countProductCateId1(), PRODUCTPERPAGE);
         Page<Product> listCate1ByPage = productService.ListCate1ByPage(PageRequest.of(page - 1, PRODUCTPERPAGE));

@@ -63,7 +63,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-5">
+                    <div class="row mb-5" id="mainProduct">
                         <c:forEach items="${list}" var="p">
                             <div class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up">
                                 <div class="block-4 text-center border">
